@@ -1,40 +1,28 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
 import java.util.Random;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Toolkit;
 
 public class GameBoard extends JPanel {
-
-    private ImageIcon backgroundImage;
+    private BufferedImage backgroundImage;
     private int boardWidth;
     private int boardHeight;
 
-public GameBoard(String imagePath) {
-        // Load the background image using Toolkit
-        Image img = Toolkit.getDefaultToolkit().getImage(getClass().getResource(imagePath));
-
-        // Wait for the image to fully load
-        MediaTracker mediaTracker = new MediaTracker(this);
-        mediaTracker.addImage(img, 0);
+    public GameBoard(String imageUrl) {
         try {
-            mediaTracker.waitForAll();
-        } catch (InterruptedException e) {
+            URL url = new URL(imageUrl);
+            backgroundImage = ImageIO.read(url);
+            boardWidth = backgroundImage.getWidth();
+            boardHeight = backgroundImage.getHeight();
+        } catch (IOException e) {
             e.printStackTrace();
-        }
-
-        if (mediaTracker.isErrorAny()) {
-            // Handle image loading error
-            System.err.println("Error loading image: " + imagePath);
             // Use default dimensions if image loading fails
             boardWidth = 800;
             boardHeight = 600;
-        } else {
-            backgroundImage = new ImageIcon(img); // Create an ImageIcon from the loaded Image
-            boardWidth = backgroundImage.getIconWidth();
-            boardHeight = backgroundImage.getIconHeight();
         }
 
         setPreferredSize(new Dimension(boardWidth, boardHeight));
@@ -46,7 +34,7 @@ public GameBoard(String imagePath) {
 
         // Draw the background image
         if (backgroundImage != null) {
-            backgroundImage.paintIcon(this, g, 0, 0);
+            g.drawImage(backgroundImage, 0, 0, this);
         }
 
         // Draw other game elements here (e.g., towers, enemies, projectiles)
@@ -55,15 +43,18 @@ public GameBoard(String imagePath) {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            // Randomly select an image path
+            // Create a list of image URLs
+            List<String> imageUrls = ImageLoader.getImageUrls();
+
+            // Pick a random URL from the list
             Random random = new Random();
-            int randomIndex = random.nextInt(ImageLoader.imagePaths.size());
-            String selectedImagePath = ImageLoader.imagePaths.get(randomIndex);
-            
-            // Create the game board with the selected image
+            int randomIndex = random.nextInt(imageUrls.size());
+            String githubImageUrl = imageUrls.get(randomIndex);
+
+            // Create the game board with the selected image URL
             JFrame frame = new JFrame("Swinging Tower Defense");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.add(new GameBoard(selectedImagePath));
+            frame.add(new GameBoard(githubImageUrl));
             frame.pack();
             frame.setVisible(true);
         });

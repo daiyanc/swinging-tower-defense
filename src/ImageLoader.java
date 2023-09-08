@@ -2,12 +2,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImageLoader {
-    public static List<String> imagePaths = new ArrayList<>();
-    
-    static {
-        imagePaths.add("/img/broken-park.png");
-        imagePaths.add("/img/soccer-field.png");
-        imagePaths.add("/img/graveyard.png");
-        imagePaths.add("/img/trap-field.png");
+    public static List<String> getImageUrls() {
+        List<String> imageUrls = new ArrayList<>();
+        imageUrls.add("https://raw.githubusercontent.com/dchowdhury-mdsol/swinging-tower-defense/main/img/broken-park.png");
+        imageUrls.add("https://raw.githubusercontent.com/dchowdhury-mdsol/swinging-tower-defense/main/img/graveyard.png");
+        imageUrls.add("https://raw.githubusercontent.com/dchowdhury-mdsol/swinging-tower-defense/main/img/soccer-field.png");
+        imageUrls.add("https://raw.githubusercontent.com/dchowdhury-mdsol/swinging-tower-defense/main/img/trap-field.png");
+
+        return imageUrls;
     }
 }
